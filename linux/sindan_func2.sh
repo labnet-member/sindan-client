@@ -76,16 +76,16 @@ function check_v4autoconf() {
   local v4addr dhcp_data dhcpv4addr cmp conpath
   if [ "$2" = "dhcp" ] || [ "$2" = "auto" ]; then
     v4addr=$(get_v4addr "$1")
-    if which dhcpcd > /dev/null 2>&1; then
+    if systemctl is-active --quiet dhcpcd > /dev/null 2>&1; then
       dhcp_data=$(dhcpcd -4 -U "$1" | sed "s/'//g")
     elif [ -f /var/lib/dhcp/dhclient."$1".leases ]; then
       dhcp_data=$(sed 's/"//g' /var/lib/dhcp/dhclient."$1".leases)
-    elif which nmcli > /dev/null 2>&1 &&
+    elif systemctl is-active --quiet NetworkManager > /dev/null 2>&1 &&
          [ "$(nmcli networking)" = "enabled" ]; then
       conpath=$(nmcli -g general.con-path device show $1)
       dhcp_data=$(nmcli -g dhcp4 connection show $conpath)
     else
-      dhcp_data='TBD'
+      dhcp_data="TBD"
     fi
     echo "$dhcp_data"
 
@@ -761,11 +761,11 @@ function check_v6autoconf() {
       result=0
     fi
     if [ -n "$o_flag" ] || [ -n "$m_flag" ]; then
-      if which dhcpcd > /dev/null 2>&1; then
+      if systemctl is-active --quiet dhcpcd > /dev/null 2>&1; then
         dhcp_data=$(dhcpcd -6 -U "$1" | sed "s/'//g")
       elif [ -f /var/lib/dhcp/dhclient."$1".leases ]; then
         dhcp_data=$(sed 's/"//g' /var/lib/dhcp/dhclient."$1".leases)
-      elif which nmcli > /dev/null 2>&1 &&
+      elif systemctl is-active --quiet NetworkManager > /dev/null 2>&1 &&
            [ "$(nmcli networking)" = "enabled" ]; then
         conpath=$(nmcli -g general.con-path device show "$1")
         dhcp_data=$(nmcli -g dhcp6 connection show "$conpath")

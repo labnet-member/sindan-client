@@ -140,11 +140,11 @@ function get_wlan_info() {
     echo "ERROR: get_wlan_info <ifname>." 1>&2
     return 1
   fi
-  iw dev "$1" info
+  sudo iw dev "$1" info
   MAX_RETRIES=15
   RETRY_INTERVAL=1                                                      
   for ((i=1; i<=MAX_RETRIES; i++)); do
-    output=$(iw dev "$1" link)
+    output=$(sudo iw dev "$1" link)
     # Check if “tx bitrate:” data is included.
     if echo "$output" | grep -q "tx bitrate:"; then
       echo "$output"
@@ -332,7 +332,7 @@ function get_wlan_environment() {
     return 1
   fi
   echo "BSSID,SSID,Mode,Band,Channel,Bandwidth,Security,RSSI"
-  iw dev "$1" scan                                                      |
+  sudo iw dev "$1" scan                                                      |
   awk 'BEGIN {
     bssid="";
     ssid="";

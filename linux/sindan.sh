@@ -60,6 +60,27 @@ echo $$ >"$PIDFILE"
 # Make log directory
 mkdir -p log
 
+# Create timestamp subdirectory for this execution
+TIMESTAMP_DIR=$(date '+%Y%m%d%H%M%S')
+# Get original user's home directory (handle sudo execution)
+if [ -n "$SUDO_USER" ]; then
+  ORIGINAL_USER="$SUDO_USER"
+  ORIGINAL_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+elif [ -n "$(logname 2>/dev/null)" ]; then
+  ORIGINAL_USER=$(logname)
+  ORIGINAL_HOME=$(getent passwd "$ORIGINAL_USER" | cut -d: -f6)
+else
+  ORIGINAL_USER=$(whoami)
+  ORIGINAL_HOME="$HOME"
+fi
+LOG_DIR="$ORIGINAL_HOME/log/tmp/$TIMESTAMP_DIR"
+mkdir -p "$LOG_DIR"
+# Set ownership to ORIGINAL_USER
+if [ -n "$ORIGINAL_USER" ]; then
+  chown -R "$ORIGINAL_USER:$ORIGINAL_USER" "$ORIGINAL_HOME/log" 2>/dev/null || true
+fi
+export LOG_DIR
+
 # Generate UUID
 uuid=$(generate_uuid)
 UUID=$uuid
@@ -1153,4 +1174,3 @@ rm -f "$PIDFILE"
 echo " done."
 
 exit 0
-

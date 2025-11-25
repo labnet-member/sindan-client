@@ -92,9 +92,15 @@ layer="hardware"
 
 # Get OS version
 os_info=$(get_os_info)
+if [ -n "$os_info" ]; then
+  write_json "$layer" common os_info "$INFO" self "$os_info" 0
+fi
 
 # Get Host name
 hostname=$(get_hostname)
+if [ -n "$hostname" ]; then
+  write_json "$layer" common hostname "$INFO" self "$hostname" 0
+fi
 
 # Get hardware information
 hw_info=$(get_hw_info)
@@ -442,6 +448,8 @@ if [ "$EXCL_IPv4" != "yes" ]; then
   fi
   write_json "$layer" IPv4 v4autoconf "$result_phase2_1" self		\
              "$v4autoconf" 0
+  write_json "$layer" IPv4 v4ifstatus "$result_phase2_1" self		\
+             "$result_phase2_1" 0
 
   # Get IPv4 address
   v4addr=$(get_v4addr "$ifname")
@@ -522,6 +530,8 @@ if [ "$EXCL_IPv6" != "yes" ]; then
       v6autoconf="v6conf is $v6ifconf"
       write_json "$layer" IPv6 v6autoconf "$result_phase2_2" self	\
                  "$v6autoconf" 0
+      write_json "$layer" IPv6 v6ifstatus "$result_phase2_2" self	\
+                 "$result_phase2_2" 0
       # Get IPv6 address
       v6addrs=$(get_v6addrs "$ifname" "")
       if [ -n "$v6addr" ]; then
@@ -724,6 +734,9 @@ if [ "$EXCL_IPv6" != "yes" ]; then
 
         count=$(( count + 1 ))
       done
+      # Write IPv6 interface status after all RA processing
+      write_json "$layer" IPv6 v6ifstatus "$result_phase2_2" self	\
+                 "$result_phase2_2" 0
     fi
 
     # Get IPv6 routers

@@ -52,6 +52,8 @@ function cmdset_ping() {
   fi
   write_json "$layer" "$ipv" "v${ver}alive_${type}" "$result" "$target"	\
              "$ping_result" "$count"
+  write_json "$layer" "$ipv" "v${ver}status_${type}" "$result" "$target"	\
+             "$result" "$count"
   if [ "$result" = "$SUCCESS" ]; then
     rtt_data=($(echo "$ping_result" | get_rtt))
     for i in 0 1 2 3; do

@@ -39,6 +39,8 @@ function cmdset_http() {
   fi
   write_json "$layer" "$ipv" "v${ver}http_${type}" "$result" "$target"	\
              "$http_ans" "$count"
+  write_json "$layer" "$ipv" "v${ver}httpstatus_${type}" "$result" "$target"	\
+             "$result" "$count"
   if [ "$result" = "$SUCCESS" ]; then
     string="$string\n  status: ok, http status code: $http_ans"
   else
@@ -82,6 +84,8 @@ function cmdset_ssh() {
   fi
   write_json "$layer" "$ipv" "v${ver}ssh_${type}" "$result" "$target"  \
              "$ssh_ans" "$count"
+  write_json "$layer" "$ipv" "v${ver}sshstatus_${type}" "$result" "$target"	\
+             "$result" "$count"
   if [ "$result" = "$SUCCESS" ]; then
     string="$string\n  status: ok"
   else
@@ -127,6 +131,8 @@ function cmdset_portscan() {
   fi
   write_json "$layer" "$ipv" "v${ver}portscan_${port}" "$result"	\
              "$target" "$ps_ans" "$count"
+  write_json "$layer" "$ipv" "v${ver}portscanstatus_${port}" "$result"	\
+             "$target" "$result" "$count"
   if [ "$result" = "$SUCCESS" ]; then
     string="$string\n  status: ok"
   else
@@ -217,6 +223,8 @@ function cmdset_speedtest() {
   else
     stat=$?
   fi
+  write_json "$layer" "$pver" speedteststatus "$result" "$target"	\
+             "$result" "$count"
   if [ "$result" = "$SUCCESS" ]; then
     string="$string\n  status: ok"
     write_json "$layer" "$pver" speedtest "$result" "$target"		\

@@ -96,6 +96,8 @@ function cmdset_dnslookup() {
     fi
     write_json "$layer" "$ipv" "v${ver}dnsqry_${type}_${fqdn}"		\
                "$result" "$target" "$dns_result" "$count"
+    write_json "$layer" "$ipv" "v${ver}dnsstatus_${type}_${fqdn}"	\
+               "$result" "$target" "$result" "$count"
     if [ "$result" = "$SUCCESS" ]; then
       dns_ans=$(echo "$dns_result" | get_dnsans "$type")
       write_json "$layer" "$ipv" "v${ver}dnsans_${type}_${fqdn}"	\

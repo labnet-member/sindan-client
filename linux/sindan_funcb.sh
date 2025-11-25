@@ -72,8 +72,8 @@ function write_json_campaign() {
        "\"ssid\" : \"$network_id\","					\
        "\"hostname\" : \"$6\","						\
        "\"version\" : \"$VERSION\","					\
-       "\"occurred_at\" : \"$(date -u '+%Y-%m-%d %T')\" }"		\
-  > log/campaign_"$(date -u '+%s')".json
+       "\"occurred_at\" : \"$(date '+%Y-%m-%d %T')\" }"		\
+  > "${LOG_DIR:-log}/campaign_"$(date '+%s')".json"
   return $?
 }
 
@@ -95,8 +95,7 @@ function write_json() {
        "\"result\" : \"$4\","						\
        "\"target\" : \"$5\","						\
        "\"detail\" : \"$detail\","					\
-       "\"occurred_at\" : \"$(date -u '+%Y-%m-%d %T')\" }"		\
-  > log/sindan_"$1"_"$3"_"$7"_"$(date -u '+%s')".json
+       "\"occurred_at\" : \"$(date '+%Y-%m-%d %T')\" }"		\
+  > "${LOG_DIR:-log}/sindan_"$1"_"$3"_"$7"_"$(date '+%s')".json"
   return $?
 }
-
